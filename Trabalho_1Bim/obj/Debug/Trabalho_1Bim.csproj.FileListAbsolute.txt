@@ -1,0 +1,20 @@
+C:\Users\Marcus Ramos\source\repos\Trabalho_1Bim\Trabalho_1Bim\bin\Debug\Trabalho_1Bim.exe.config
+C:\Users\Marcus Ramos\source\repos\Trabalho_1Bim\Trabalho_1Bim\bin\Debug\Trabalho_1Bim.exe
+C:\Users\Marcus Ramos\source\repos\Trabalho_1Bim\Trabalho_1Bim\bin\Debug\Trabalho_1Bim.pdb
+C:\Users\Marcus Ramos\source\repos\Trabalho_1Bim\Trabalho_1Bim\obj\Debug\Trabalho_1Bim.csproj.AssemblyReference.cache
+C:\Users\Marcus Ramos\source\repos\Trabalho_1Bim\Trabalho_1Bim\obj\Debug\Trabalho_1Bim.Form1.resources
+C:\Users\Marcus Ramos\source\repos\Trabalho_1Bim\Trabalho_1Bim\obj\Debug\Trabalho_1Bim.Properties.Resources.resources
+C:\Users\Marcus Ramos\source\repos\Trabalho_1Bim\Trabalho_1Bim\obj\Debug\Trabalho_1Bim.csproj.GenerateResource.cache
+C:\Users\Marcus Ramos\source\repos\Trabalho_1Bim\Trabalho_1Bim\obj\Debug\Trabalho_1Bim.csproj.CoreCompileInputs.cache
+C:\Users\Marcus Ramos\source\repos\Trabalho_1Bim\Trabalho_1Bim\obj\Debug\Trabalho_1Bim.exe
+C:\Users\Marcus Ramos\source\repos\Trabalho_1Bim\Trabalho_1Bim\obj\Debug\Trabalho_1Bim.pdb
+C:\Users\Marcus Ramos\OneDrive\Área de Trabalho\Topicos 01 - Chico\Trabalho_1Bim\Trabalho_1Bim\obj\Debug\Trabalho_1Bim.csproj.AssemblyReference.cache
+C:\Users\Marcus Ramos\OneDrive\Área de Trabalho\Topicos 01 - Chico\Trabalho_1Bim\Trabalho_1Bim\obj\Debug\Trabalho_1Bim.Form1.resources
+C:\Users\Marcus Ramos\OneDrive\Área de Trabalho\Topicos 01 - Chico\Trabalho_1Bim\Trabalho_1Bim\obj\Debug\Trabalho_1Bim.Properties.Resources.resources
+C:\Users\Marcus Ramos\OneDrive\Área de Trabalho\Topicos 01 - Chico\Trabalho_1Bim\Trabalho_1Bim\obj\Debug\Trabalho_1Bim.csproj.GenerateResource.cache
+C:\Users\Marcus Ramos\OneDrive\Área de Trabalho\Topicos 01 - Chico\Trabalho_1Bim\Trabalho_1Bim\obj\Debug\Trabalho_1Bim.csproj.CoreCompileInputs.cache
+C:\Users\Marcus Ramos\OneDrive\Área de Trabalho\Topicos 01 - Chico\Trabalho_1Bim\Trabalho_1Bim\bin\Debug\Trabalho_1Bim.exe.config
+C:\Users\Marcus Ramos\OneDrive\Área de Trabalho\Topicos 01 - Chico\Trabalho_1Bim\Trabalho_1Bim\bin\Debug\Trabalho_1Bim.exe
+C:\Users\Marcus Ramos\OneDrive\Área de Trabalho\Topicos 01 - Chico\Trabalho_1Bim\Trabalho_1Bim\bin\Debug\Trabalho_1Bim.pdb
+C:\Users\Marcus Ramos\OneDrive\Área de Trabalho\Topicos 01 - Chico\Trabalho_1Bim\Trabalho_1Bim\obj\Debug\Trabalho_1Bim.exe
+C:\Users\Marcus Ramos\OneDrive\Área de Trabalho\Topicos 01 - Chico\Trabalho_1Bim\Trabalho_1Bim\obj\Debug\Trabalho_1Bim.pdb
