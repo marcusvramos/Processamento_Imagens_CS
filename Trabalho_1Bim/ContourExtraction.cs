@@ -1,10 +1,11 @@
 ﻿using System.Drawing.Imaging;
 using System.Drawing;
 
-namespace Trabalho_1Bim {
+namespace Trabalho_1Bim
+{
     public class ContourExtraction
     {
-        public unsafe void Countour(Bitmap imageBitmapSrc, Bitmap imageBitmapDest)
+        public unsafe void Contour(Bitmap imageBitmapSrc, Bitmap imageBitmapDest)
         {
             ConvertPretoBranco(imageBitmapSrc);
             int width = imageBitmapSrc.Width;
@@ -18,7 +19,7 @@ namespace Trabalho_1Bim {
             byte* src = (byte*)bitmapDataSrc.Scan0;
             byte* dst = (byte*)bitmapDataDest.Scan0;
 
-            // iniciando img destino como branca
+            // Inicializando a imagem de destino como branca
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -28,22 +29,25 @@ namespace Trabalho_1Bim {
                 }
             }
 
-            // percorrendo a imagem
+            // matriz para marcar os pixels visitados 
+            bool[,] visited = new bool[height, width];
+
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if (IsBlackPixel(src, width, height, stride, x, y))
+                    if (src[y * stride + x * pixelSize] == 255 && !visited[y, x])
                     {
-                        // verificando os 8 pixels adjacentes
-                        PaintIfWhite(dst, src, width, height, stride, x + 1, y); // Direita
-                        PaintIfWhite(dst, src, width, height, stride, x - 1, y); // Esquerda
-                        PaintIfWhite(dst, src, width, height, stride, x, y + 1); // Abaixo
-                        PaintIfWhite(dst, src, width, height, stride, x, y - 1); // Acima
-                        PaintIfWhite(dst, src, width, height, stride, x + 1, y + 1); // Diagonal baixo-direita
-                        PaintIfWhite(dst, src, width, height, stride, x - 1, y + 1); // Diagonal baixo-esquerda
-                        PaintIfWhite(dst, src, width, height, stride, x + 1, y - 1); // Diagonal cima-direita
-                        PaintIfWhite(dst, src, width, height, stride, x - 1, y - 1); // Diagonal cima-esquerda
+                        // Verifica se o pixel branco tem pelo menos um vizinho preto (é um pixel de contorno)
+                        if (IsContourPixel(src, x, y, width, height, stride, pixelSize))
+                        {
+                            // Novo ponto inicial de contorno
+                            FollowContour(src, dst, visited, x, y, width, height, stride, pixelSize);
+                        }
+                        else
+                        {
+                            visited[y, x] = true;
+                        }
                     }
                 }
             }
@@ -52,27 +56,156 @@ namespace Trabalho_1Bim {
             imageBitmapDest.UnlockBits(bitmapDataDest);
         }
 
-        private unsafe bool IsBlackPixel(byte* src, int width, int height, int stride, int x, int y)
+        private unsafe void FollowContour(byte* src, byte* dst, bool[,] visited, int x, int y,
+                                  int width, int height, int stride, int pixelSize)
         {
-            int pixelSize = 3;
-            if (x < 0 || x >= width || y < 0 || y >= height)
-                return false;
+            int startX = x;
+            int startY = y;
+            int maxIterations = width * height;
+            int iterations = 0;
+            bool firstIteration = true;
+            bool moved = true;
 
-            int pos = y * stride + x * pixelSize;
-            return (src[pos] == 0);
+            while (moved && (firstIteration || !(x == startX && y == startY)) && iterations <= maxIterations)
+            {
+                firstIteration = false;
+
+                int pos = y * stride + x * pixelSize;
+                dst[pos] = dst[pos + 1] = dst[pos + 2] = 0; // Preto (marca o contorno)
+                visited[y, x] = true;
+
+                moved = false;
+
+                // Verificar os vizinhos em sentido anti-horário
+                // Direção 0: Direita
+                if (!moved &&
+                    x + 1 < width &&
+                    src[y * stride + (x + 1) * pixelSize] == 255 &&
+                    !visited[y, x + 1] &&
+                    IsContourPixel(src, x + 1, y, width, height, stride, pixelSize))
+                {
+                    x = x + 1;
+                    moved = true;
+                }
+                // Direção 1: Baixo-Direita
+                else if (!moved &&
+                    x + 1 < width &&
+                    y + 1 < height &&
+                    src[(y + 1) * stride + (x + 1) * pixelSize] == 255 &&
+                    !visited[y + 1, x + 1] &&
+                    IsContourPixel(src, x + 1, y + 1, width, height, stride, pixelSize))
+                {
+                    x = x + 1;
+                    y = y + 1;
+                    moved = true;
+                }
+                // Direção 2: Abaixo
+                else if (!moved &&
+                    y + 1 < height &&
+                    src[(y + 1) * stride + x * pixelSize] == 255 &&
+                    !visited[y + 1, x] &&
+                    IsContourPixel(src, x, y + 1, width, height, stride, pixelSize))
+                {
+                    y = y + 1;
+                    moved = true;
+                }
+                // Direção 3: Baixo-Esquerda
+                else if (!moved &&
+                    x - 1 >= 0 &&
+                    y + 1 < height &&
+                    src[(y + 1) * stride + (x - 1) * pixelSize] == 255 &&
+                    !visited[y + 1, x - 1] &&
+                    IsContourPixel(src, x - 1, y + 1, width, height, stride, pixelSize))
+                {
+                    x = x - 1;
+                    y = y + 1;
+                    moved = true;
+                }
+                // Direção 4: Esquerda
+                else if (!moved &&
+                    x - 1 >= 0 &&
+                    src[y * stride + (x - 1) * pixelSize] == 255 &&
+                    !visited[y, x - 1] &&
+                    IsContourPixel(src, x - 1, y, width, height, stride, pixelSize))
+                {
+                    x = x - 1;
+                    moved = true;
+                }
+                // Direção 5: Cima-Esquerda
+                else if (!moved &&
+                    x - 1 >= 0 &&
+                    y - 1 >= 0 &&
+                    src[(y - 1) * stride + (x - 1) * pixelSize] == 255 &&
+                    !visited[y - 1, x - 1] &&
+                    IsContourPixel(src, x - 1, y - 1, width, height, stride, pixelSize))
+                {
+                    x = x - 1;
+                    y = y - 1;
+                    moved = true;
+                }
+                // Direção 6: Acima
+                else if (!moved &&
+                    y - 1 >= 0 &&
+                    src[(y - 1) * stride + x * pixelSize] == 255 &&
+                    !visited[y - 1, x] &&
+                    IsContourPixel(src, x, y - 1, width, height, stride, pixelSize))
+                {
+                    y = y - 1;
+                    moved = true;
+                }
+                // Direção 7: Cima-Direita
+                else if (!moved &&
+                    x + 1 < width &&
+                    y - 1 >= 0 &&
+                    src[(y - 1) * stride + (x + 1) * pixelSize] == 255 &&
+                    !visited[y - 1, x + 1] &&
+                    IsContourPixel(src, x + 1, y - 1, width, height, stride, pixelSize))
+                {
+                    x = x + 1;
+                    y = y - 1;
+                    moved = true;
+                }
+
+                iterations++;
+            }
         }
 
-        private unsafe void PaintIfWhite(byte* dst, byte* src, int width, int height, int stride, int x, int y)
+        private unsafe bool IsContourPixel(byte* src, int x, int y, int width, int height, int stride, int pixelSize)
         {
-            int pixelSize = 3;
-            if (x < 0 || x >= width || y < 0 || y >= height)
-                return;
-
             int pos = y * stride + x * pixelSize;
-            if (src[pos] == 255)
+
+            if (src[pos] != 255)
+                return false;
+
+            int[,] neighborOffsets = new int[,]
             {
-                dst[pos] = dst[pos + 1] = dst[pos + 2] = 0; // preto
+                { 1, 0 },   // Direita
+                { 1, 1 },   // Baixo-Direita
+                { 0, 1 },   // Abaixo
+                { -1, 1 },  // Baixo-Esquerda
+                { -1, 0 },  // Esquerda
+                { -1, -1 }, // Cima-Esquerda
+                { 0, -1 },  // Acima
+                { 1, -1 }   // Cima-Direita
+            };
+
+            bool isContour = false;
+            for (int i = 0; i < 8 && !isContour; i++)
+            {
+                int nx = x + neighborOffsets[i, 0];
+                int ny = y + neighborOffsets[i, 1];
+
+                if (nx >= 0 && nx < width && ny >= 0 && ny < height)
+                {
+                    int nPos = ny * stride + nx * pixelSize;
+                    if (src[nPos] == 0)
+                    {
+                        isContour = true;
+                    }
+                }
             }
+
+            return isContour;
         }
 
         private unsafe void ConvertPretoBranco(Bitmap image)
