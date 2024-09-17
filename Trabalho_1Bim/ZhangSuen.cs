@@ -42,7 +42,7 @@ namespace Trabalho_1Bim
                         byte b = src[pos];
                         int intensity = (r + g + b) / 3;
 
-                        if (intensity < 220 && CanRemoveFirstSubIteration(src, stride, pixelSize, x, y))
+                        if (intensity <= 220 && CanRemoveFirstSubIteration(src, stride, pixelSize, x, y))
                         {
                             pixelsToRemove.Add((x, y));
                             pixelsWereRemoved = true;
@@ -72,7 +72,7 @@ namespace Trabalho_1Bim
                         byte b = src[pos];
                         int intensity = (r + g + b) / 3;
 
-                        if (intensity < 220 && CanRemoveSecondSubIteration(src, stride, pixelSize, x, y))
+                        if (intensity <= 220 && CanRemoveSecondSubIteration(src, stride, pixelSize, x, y))
                         {
                             pixelsToRemove.Add((x, y));
                             pixelsWereRemoved = true;
@@ -102,12 +102,12 @@ namespace Trabalho_1Bim
             int width = imageBitmapSrc.Width;
             int height = imageBitmapSrc.Height;
             int pixelSize = 3;
-            const int threshold = 220;
+            Int32 bw;
 
             BitmapData bitmapDataSrc = imageBitmapSrc.LockBits(new Rectangle(0, 0, width, height),
-                ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+                ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
             BitmapData bitmapDataDst = imageBitmapDest.LockBits(new Rectangle(0, 0, width, height),
-                ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
+                ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
 
             int padding = bitmapDataSrc.Stride - (width * pixelSize);
 
@@ -116,20 +116,27 @@ namespace Trabalho_1Bim
                 byte* src = (byte*)bitmapDataSrc.Scan0.ToPointer();
                 byte* dst = (byte*)bitmapDataDst.Scan0.ToPointer();
 
+                int r, g, b;
                 for (int y = 0; y < height; y++)
                 {
                     for (int x = 0; x < width; x++)
                     {
-                        int b = *(src++);
-                        int g = *(src++);
-                        int r = *(src++);
-                        byte gray = (byte)((r * 30 + g * 59 + b * 11) / 100);
+                        b = *(src++);
+                        g = *(src++);
+                        r = *(src++);
+                        byte gray = (byte)((r + b + g) / 3);
 
-                        byte bw = (gray > threshold) ? (byte)255 : (byte)0;
-
-                        *(dst++) = bw;
-                        *(dst++) = bw;
-                        *(dst++) = bw;
+                        if (gray > 220)
+                        {
+                            bw = 255;
+                        }
+                        else
+                        {
+                            bw = 0;
+                        }
+                        *(dst++) = (byte)bw;
+                        *(dst++) = (byte)bw;
+                        *(dst++) = (byte)bw;
                     }
                     src += padding;
                     dst += padding;
@@ -183,7 +190,7 @@ namespace Trabalho_1Bim
             int r = src[pos + 2];
             int g = src[pos + 1];
             int b = src[pos];
-            return (r + g + b) / 3 < 220 ? 1 : 0;
+            return (r + g + b) / 3 <= 220 ? 1 : 0;
         }
 
         private int CountTransitions(int[] neighbors)

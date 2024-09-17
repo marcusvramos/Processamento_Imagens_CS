@@ -65,7 +65,7 @@ public class ContourRectangle
     {
         using (Graphics g = Graphics.FromImage(image))
         {
-            Pen redPen = new Pen(Color.Red, 2);
+            Pen redPen = new Pen(Color.Red, 1);
             g.DrawRectangle(redPen, minX, minY, maxX - minX, maxY - minY);
         }
     }

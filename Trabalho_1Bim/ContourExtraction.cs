@@ -41,7 +41,7 @@ namespace Trabalho_1Bim
                         // Verifica se o pixel branco tem pelo menos um vizinho preto (é um pixel de contorno)
                         if (IsContourPixel(src, x, y, width, height, stride, pixelSize))
                         {
-                            // Novo ponto inicial de contorno
+                            // Novo ponto inicial de  contorno
                             FollowContour(src, dst, visited, x, y, width, height, stride, pixelSize);
                         }
                         else
